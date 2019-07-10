@@ -1,0 +1,26 @@
+#! /bin/bash
+
+#:  * `is-updated`
+#:
+#:  Check if brew is updated, but don't run the update
+
+# Copied from https://github.com/Homebrew/brew/blob/de5cd926e6454d82d735688e9723d2f49bc5f8ee/Library/Homebrew/cmd/update.sh
+git() {
+  if [[ -z "$GIT_EXECUTABLE" ]]
+  then
+    GIT_EXECUTABLE="$("$HOMEBREW_LIBRARY/Homebrew/shims/scm/git" --homebrew=print-path)"
+  fi
+  "$GIT_EXECUTABLE" "$@"
+}
+
+INSTALLED_VERSION=$(git rev-parse -q --verify master)
+UPSTREAM_VERSION=$(git rev-parse -q --verify origin/master)
+
+if [[ "${INSTALLED_VERSION}" != "${UPSTREAM_VERSION}" ]]
+then
+  echo "Not up-to-date." >&2
+  exit 1
+fi
+
+echo "Already up-to-date."
+exit 0
