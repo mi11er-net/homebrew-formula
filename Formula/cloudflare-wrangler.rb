@@ -8,9 +8,11 @@ class CloudflareWrangler < Formula
   sha256 "2162e42d1fac6e3c252378a358016c9a3085d1769ded4327104995e0bdbc13a9"
 
   depends_on "node"
+  depends_on "python" => :build
 
   def install
     system "npm", "install", *Language::Node.std_npm_install_args(libexec)
+    system "node",  "#{libexec}/lib/node_modules/@cloudflare/wrangler/install-wrangler.js"
     bin.install_symlink Dir["#{libexec}/bin/*"]
   end
 
